@@ -1,0 +1,17 @@
+// https://getbootstrap.com/docs/4.2/getting-started/theming/
+
+$primary: #9DA1A3;
+$secondary: #909495;
+$dark: rgb(29, 29, 29);
+$light: #F7F8F6;
+$info: #386182;
+$success: #58bc67;
+$danger: #f44336;
+$warning: #d5ac2f;
+
+// $body-bg: $dark;
+// $body-color: $light;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+
