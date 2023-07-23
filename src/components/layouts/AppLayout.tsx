@@ -16,7 +16,9 @@ function AppLayout() {
   return (
     <Container fluid className="d-flex flex-column p-0 gap-4">
       <Navigation token={accessToken} />
-      <Outlet />
+      <Container fluid className="d-flex flex-column p-2">
+        <Outlet />
+      </Container>
     </Container>
   );
 }

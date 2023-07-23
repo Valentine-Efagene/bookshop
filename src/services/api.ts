@@ -1,7 +1,7 @@
 // Need to use the React-specific entry point to import createApi
 // https://redux-toolkit.js.org/rtk-query/usage/mutations
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { ISignInDto, ISignUpDto } from "../types";
+import type { IBook, ISignInDto, ISignUpDto } from "../types";
 import { RootState } from "../store";
 
 // Define a service using a base URL and expected endpoints
@@ -44,12 +44,13 @@ export const api = createApi({
         method: "GET",
       }),
     }),
+
     // BOOKS
-    getAllBooks: builder.query<string, string>({
-      query: (id: string) => `books/${id}`,
+    getAllBooks: builder.query<IBook[], undefined>({
+      query: () => "/books",
     }),
-    getBookById: builder.query<string, string>({
-      query: () => `books`,
+    getBookById: builder.query<IBook, string>({
+      query: (id) => `/books/${id}`,
     }),
     deleteBookById: builder.query<string, string>({
       query: (id: string) => ({

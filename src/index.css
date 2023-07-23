@@ -1,6 +1,7 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --max-width: 1440px;
+  --nav-max-width: 1240px;
+  --max-width: 1110px;
   /*
   line-height: 1.5;
   font-weight: 400;

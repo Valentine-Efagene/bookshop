@@ -3,6 +3,7 @@ export interface IBook {
   title: string;
   author: string;
   category?: string;
+  thumbnail?: string;
 }
 
 export interface IUser {

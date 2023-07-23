@@ -5,18 +5,38 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink } from "react-router-dom";
 import { useGetProfileQuery } from "../../services/api";
 import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
-import { useAppDispatch } from "../../store";
-import { logOut } from "../../services/authSlice";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { logOut, setProfile } from "../../services/authSlice";
+import { useEffect } from "react";
 
-function Navigation({ token }: { token: string | null }) {
+function Navigation({ token }: { token?: string | null }) {
   const dispatch = useAppDispatch();
+  const { accessToken, profile } = useAppSelector((state) => state.auth);
 
-  const { data: user, isLoading } = useGetProfileQuery(token, {
+  const { data: user } = useGetProfileQuery(token, {
     pollingInterval: 3000,
     refetchOnMountOrArgChange: true,
     skip: false,
   });
+
+  useEffect(() => {
+    dispatch(setProfile(user));
+  }, [user, dispatch]);
+
+  const AuthButton = () => {
+    if (accessToken) {
+      return (
+        <Button
+          variant="outline-dark"
+          onClick={() => {
+            dispatch(logOut());
+          }}
+        >
+          Log Out
+        </Button>
+      );
+    }
+  };
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -30,9 +50,7 @@ function Navigation({ token }: { token: string | null }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">
-              {isLoading ? <Spinner size="sm" /> : user?.email}
-            </Nav.Link>
+            <Nav.Link href="#link">{profile?.email}</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -45,15 +63,8 @@ function Navigation({ token }: { token: string | null }) {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
+          {AuthButton()}
         </Navbar.Collapse>
-        <Button
-          variant="outline-dark"
-          onClick={() => {
-            dispatch(logOut());
-          }}
-        >
-          Log Out
-        </Button>
       </Container>
     </Navbar>
   );

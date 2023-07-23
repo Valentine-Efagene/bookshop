@@ -6,6 +6,7 @@ import NoMatch from "./pages/NoMatch/NoMatch";
 import Profile from "./pages/Profile/Profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
+import Books from "./pages/Books/Books";
 
 // https://reactrouter.com/en/main/routers/picking-a-router#web-projects
 const router = createBrowserRouter([
@@ -34,6 +35,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "books",
+        element: (
+          <ProtectedRoute>
+            <Books />
           </ProtectedRoute>
         ),
       },

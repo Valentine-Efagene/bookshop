@@ -12,7 +12,7 @@ const AuthRoute = ({ children }: IProps) => {
 
   useLayoutEffect(() => {
     if (accessToken) {
-      navigate("/profile");
+      navigate("/books");
     }
   }, [navigate, accessToken]);
 
