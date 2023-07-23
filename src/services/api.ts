@@ -21,10 +21,9 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    signUp: builder.mutation<ISignUpDto, object>({
+    signUp: builder.mutation<{ access_token: string }, ISignInDto>({
       // AUTHENTICATION
       query: (credentials: ISignUpDto) => {
-        console.log(credentials);
         return {
           url: "/auth/signup",
           method: "POST",

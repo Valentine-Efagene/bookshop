@@ -4,16 +4,19 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink } from "react-router-dom";
 import { useGetProfileQuery } from "../../services/api";
-import { Spinner } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
+import { useAppDispatch } from "../../store";
+import { logOut } from "../../services/authSlice";
 
 function Navigation({ token }: { token: string | null }) {
+  const dispatch = useAppDispatch();
+
   const { data: user, isLoading } = useGetProfileQuery(token, {
     pollingInterval: 3000,
     refetchOnMountOrArgChange: true,
     skip: false,
   });
-
-  console.log({ token });
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -43,6 +46,14 @@ function Navigation({ token }: { token: string | null }) {
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
+        <Button
+          variant="outline-dark"
+          onClick={() => {
+            dispatch(logOut());
+          }}
+        >
+          Log Out
+        </Button>
       </Container>
     </Navbar>
   );

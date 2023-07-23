@@ -5,8 +5,11 @@ import Spinner from "react-bootstrap/Spinner";
 import { Link } from "react-router-dom";
 import { ISignUpDto } from "../../types";
 import { useSignUpMutation } from "../../services/api";
+import { useAppDispatch } from "../../store";
+import { saveToken } from "../../services/authSlice";
 
 function SignIn() {
+  const dispatch = useAppDispatch();
   const [signUp] = useSignUpMutation();
 
   const {
@@ -25,10 +28,10 @@ function SignIn() {
 
   async function onSubmit(data: ISignUpDto) {
     try {
-      const response = await signUp(data);
-      console.log({ "signup response": response });
+      const { access_token } = await signUp(data).unwrap();
+      dispatch(saveToken(access_token));
     } catch (error) {
-      console.log({ "Sign up error": error });
+      console.log(error);
     }
   }
 

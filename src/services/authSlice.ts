@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import LocalStorage from "../helpers/LocalStorage";
 
 const authSlice = createSlice({
   name: "auth",
@@ -8,10 +9,12 @@ const authSlice = createSlice({
   reducers: {
     saveToken(state, action) {
       state.accessToken = action.payload;
+      LocalStorage.setAccessToken(action.payload);
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    logOut(state, _) {
+    logOut(state) {
       state.accessToken = null;
+      LocalStorage.clear();
     },
   },
 });
