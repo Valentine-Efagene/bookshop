@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Navigation from "../Nav/Navigation";
 import { Outlet } from "react-router-dom";
+import styles from "./AppLayout.module.css";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { saveToken } from "../../services/authSlice";
 
@@ -14,9 +15,9 @@ function AppLayout() {
   }, [dispatch, accessToken]);
 
   return (
-    <Container fluid className="d-flex flex-column p-0 gap-4">
+    <Container fluid className="d-flex flex-column">
       <Navigation token={accessToken} />
-      <Container fluid className="d-flex flex-column p-2">
+      <Container fluid className={`${styles.content} d-flex flex-column`}>
         <Outlet />
       </Container>
     </Container>

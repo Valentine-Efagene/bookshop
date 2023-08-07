@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 // Or from '@reduxjs/toolkit/query/react'
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "./services/api";
@@ -6,21 +6,51 @@ import authReducer from "./services/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
 
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+
+// https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist
+
+const persistConfig = {
+  key: "root",
+  storage,
+  blacklist: [api.reducerPath],
+};
+
+const rootReducer = combineReducers({
+  // Add the generated reducer as a specific top-level slice
+  [api.reducerPath]: api.reducer,
+  auth: authReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 export const store = configureStore({
-  reducer: {
-    // Add the generated reducer as a specific top-level slice
-    [api.reducerPath]: api.reducer,
-    auth: authReducer,
-  },
+  reducer: persistedReducer,
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(api.middleware),
 });
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors
 // see `setupListeners` docs - takes an optional callback as the 2nd arg for customization
 setupListeners(store.dispatch);
+
+export const persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

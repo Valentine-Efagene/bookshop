@@ -9,3 +9,7 @@ Demo Front End for bookshop-api
 - Solution
   Make sure CORS is enabled on the server, and set Vite to run on localhost, not 127.0.0.1
   https://vitejs.dev/config/server-options.html#server-host
+
+# References
+
+1. https://paystack.com/docs/guides/accept_payments_on_your_react_app/

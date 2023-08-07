@@ -4,7 +4,6 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink } from "react-router-dom";
 import { useGetProfileQuery } from "../../services/api";
-import Button from "react-bootstrap/Button";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { logOut, setProfile } from "../../services/authSlice";
 import { useEffect } from "react";
@@ -23,21 +22,6 @@ function Navigation({ token }: { token?: string | null }) {
     dispatch(setProfile(user));
   }, [user, dispatch]);
 
-  const AuthButton = () => {
-    if (accessToken) {
-      return (
-        <Button
-          variant="outline-dark"
-          onClick={() => {
-            dispatch(logOut());
-          }}
-        >
-          Log Out
-        </Button>
-      );
-    }
-  };
-
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -49,21 +33,27 @@ function Navigation({ token }: { token?: string | null }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">{profile?.email}</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
+            <Nav.Link>
+              <NavLink to="/">Home</NavLink>
+            </Nav.Link>
+            <Nav.Link>
+              <NavLink to="/cart">Cart</NavLink>
+            </Nav.Link>
+          </Nav>
+          {accessToken ? (
+            <NavDropdown
+              title={`${profile?.firstName?.[0]} ${profile?.lastName?.[0]}`}
+              id="basic-nav-dropdown"
+            >
+              <NavDropdown.Item
+                onClick={() => {
+                  dispatch(logOut());
+                }}
+              >
+                Log Out
               </NavDropdown.Item>
             </NavDropdown>
-          </Nav>
-          {AuthButton()}
+          ) : null}
         </Navbar.Collapse>
       </Container>
     </Navbar>
