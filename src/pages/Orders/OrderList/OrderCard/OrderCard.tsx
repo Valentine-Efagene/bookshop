@@ -10,14 +10,6 @@ export default function OrderCard({ order }: { order: IOrder }) {
       0
     ) ?? 0;
 
-  // const handleRemove = async () => {
-  //   try {
-  //     await removeFromCart(_id);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const getName = () => {
     return buyer?.email;
   };
@@ -28,7 +20,7 @@ export default function OrderCard({ order }: { order: IOrder }) {
         <Card.Title className="card-title">{}</Card.Title>
         <div className="d-flex align-items-center justify-content-between">
           <span className="">{getName()}</span>
-          <Link to="/order">View</Link>
+          <Link to={`/orders/${_id}`}>View</Link>
         </div>
       </Card.Body>
       <Card.Footer className="text-muted d-flex align-items-center justify-content-between">

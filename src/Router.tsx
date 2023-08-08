@@ -11,6 +11,7 @@ import AuthRoute from "./routes/AuthRoute";
 import Cart from "./pages/Cart/Cart";
 import CheckOut from "./pages/CheckOut/CheckOut";
 import Orders from "./pages/Orders/Orders";
+import Order from "./pages/Order/Order";
 
 // https://reactrouter.com/en/main/routers/picking-a-router#web-projects
 const router = createBrowserRouter([
@@ -50,13 +51,27 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+
       {
         path: "/orders",
-        element: (
-          <ProtectedRoute>
-            <Orders />
-          </ProtectedRoute>
-        ),
+        children: [
+          {
+            path: "/orders",
+            element: (
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/orders/:id",
+            element: (
+              <ProtectedRoute>
+                <Order />
+              </ProtectedRoute>
+            ),
+          },
+        ],
       },
       {
         path: "/profile",

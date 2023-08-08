@@ -116,7 +116,7 @@ export const api = createApi({
     getAllCategories: builder.query<ICategory[], void>({
       query: () => "/categories",
     }),
-    getCategoryId: builder.query<ICategory, string>({
+    getCategoryById: builder.query<ICategory, string>({
       query: (id) => `/categories/${id}`,
     }),
     createCategory: builder.mutation<string, ICategory>({
@@ -136,6 +136,9 @@ export const api = createApi({
     // ORDERS
     getAllOrders: builder.query<IOrder[], void>({
       query: () => "/orders",
+    }),
+    getOrderById: builder.query<IOrder, string>({
+      query: (id) => `/orders/${id}`,
     }),
     createOrder: builder.mutation<IOrder, ICreateOrderDto>({
       query: (order: ICreateOrderDto) => ({
@@ -165,4 +168,5 @@ export const {
   useGetAllCategoriesQuery,
   useCreateOrderMutation,
   useGetAllOrdersQuery,
+  useGetOrderByIdQuery,
 } = api;
