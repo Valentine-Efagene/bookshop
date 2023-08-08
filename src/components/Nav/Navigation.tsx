@@ -39,6 +39,9 @@ function Navigation({ token }: { token?: string | null }) {
             <Nav.Link>
               <NavLink to="/cart">Cart</NavLink>
             </Nav.Link>
+            <Nav.Link>
+              <NavLink to="/orders">Orders</NavLink>
+            </Nav.Link>
           </Nav>
           {accessToken ? (
             <NavDropdown

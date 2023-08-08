@@ -5,6 +5,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type {
   IBook,
   ICategory,
+  ICreateOrderDto,
+  IOrder,
   IProduct,
   ISignInDto,
   ISignUpDto,
@@ -130,6 +132,18 @@ export const api = createApi({
         method: "DELETE",
       }),
     }),
+
+    // ORDERS
+    getAllOrders: builder.query<IOrder[], void>({
+      query: () => "/orders",
+    }),
+    createOrder: builder.mutation<IOrder, ICreateOrderDto>({
+      query: (order: ICreateOrderDto) => ({
+        url: "/orders/",
+        method: "POST",
+        body: order,
+      }),
+    }),
   }),
 });
 
@@ -149,4 +163,6 @@ export const {
   useCreateCategoryMutation,
   useDeleteCategoryByIdMutation,
   useGetAllCategoriesQuery,
+  useCreateOrderMutation,
+  useGetAllOrdersQuery,
 } = api;

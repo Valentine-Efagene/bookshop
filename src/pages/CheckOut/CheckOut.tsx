@@ -1,8 +1,14 @@
+import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import { useGetAllProductsQuery } from "../../services/api";
-import { useAppSelector } from "../../store";
+import {
+  api,
+  useCreateOrderMutation,
+  useGetAllProductsQuery,
+} from "../../services/api";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { PaystackButton } from "react-paystack";
 import { ChangeEventHandler, useState } from "react";
+import { ICreateOrderDto } from "../../types";
 
 interface ICheckOutDto {
   email: string;
@@ -14,8 +20,11 @@ interface ICheckOutDto {
 const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
 function CheckOut() {
+  const dispatch = useAppDispatch();
   const { profile } = useAppSelector((state) => state.auth);
   const { data: products } = useGetAllProductsQuery();
+  const [createOrder, { error, isSuccess, isLoading }] =
+    useCreateOrderMutation();
   const amount =
     products?.reduce(
       (acc, curr) => acc + curr?.quantity * curr?.book?.price,
@@ -38,6 +47,12 @@ function CheckOut() {
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  useEffect(() => {
+    if (error) {
+      alert("Could not save order");
+    }
+  }, [error]);
+
   const componentProps = {
     email,
     amount,
@@ -48,9 +63,16 @@ function CheckOut() {
     },
     publicKey,
     text: "Pay Now",
-    onSuccess: () =>
-      alert("Thanks for doing business with us! Come back soon!!"),
+    onSuccess: () => {
+      const orderDto: ICreateOrderDto = {
+        products: products ?? [],
+        buyer: profile?._id ?? "",
+      };
 
+      createOrder(orderDto).then(() =>
+        dispatch(api.util.invalidateTags(["Products"]))
+      );
+    },
     onClose: () => alert("Wait! Don't leave :("),
   };
 
@@ -88,7 +110,9 @@ function CheckOut() {
         />
       </Form.Group>
       <span className="display-6 fw-bold">${amount}</span>
+      {isLoading && <span>Loading...</span>}
       <PaystackButton className="btn btn-dark" {...componentProps} />
+      {isSuccess && <span>Saved!</span>}
     </Form>
   );
 }

@@ -16,17 +16,24 @@ export interface IProduct {
   buyer?: string;
 }
 
+export interface ICreateOrderDto {
+  products: IProduct[];
+  buyer: string;
+}
+
 export interface IUser {
   _id?: string;
   email: string;
   firstName?: string;
   lastName?: string;
+  isAdmin: boolean;
 }
 
 export interface IOrder {
   _id?: string;
-  productId: string;
-  userId?: string;
+  products: IProduct[];
+  buyer?: IUser;
+  status: string;
 }
 
 export interface ICategory {
