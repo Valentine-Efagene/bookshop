@@ -12,6 +12,7 @@ import Cart from "./pages/Cart/Cart";
 import CheckOut from "./pages/CheckOut/CheckOut";
 import Orders from "./pages/Orders/Orders";
 import Order from "./pages/Order/Order";
+import AdminRoute from "./routes/AdminRoute";
 
 // https://reactrouter.com/en/main/routers/picking-a-router#web-projects
 const router = createBrowserRouter([
@@ -96,7 +97,9 @@ const router = createBrowserRouter([
             path: "/books/add",
             element: (
               <ProtectedRoute>
-                <AddBook />
+                <AdminRoute>
+                  <AddBook />
+                </AdminRoute>
               </ProtectedRoute>
             ),
           },

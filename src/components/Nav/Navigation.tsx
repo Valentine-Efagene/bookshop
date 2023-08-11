@@ -25,6 +25,18 @@ function Navigation({ token }: { token?: string | null }) {
     }
   }, [error]);
 
+  const getName = () => {
+    if (profile?.firstName && profile.lastName) {
+      return `${profile?.firstName?.[0]} ${profile?.lastName?.[0]}`;
+    }
+
+    if (profile?.firstName) {
+      return profile?.firstName?.[0];
+    }
+
+    return profile?.email;
+  };
+
   useEffect(() => {
     dispatch(setProfile(user));
   }, [user, dispatch]);
@@ -49,12 +61,12 @@ function Navigation({ token }: { token?: string | null }) {
             <Nav.Link>
               <NavLink to="/orders">Orders</NavLink>
             </Nav.Link>
+            <Nav.Link>
+              <NavLink to="/books/add">Add Book</NavLink>
+            </Nav.Link>
           </Nav>
           {accessToken ? (
-            <NavDropdown
-              title={`${profile?.firstName?.[0]} ${profile?.lastName?.[0]}`}
-              id="basic-nav-dropdown"
-            >
+            <NavDropdown title={getName()} id="basic-nav-dropdown">
               <NavDropdown.Item
                 onClick={() => {
                   dispatch(logOut());
