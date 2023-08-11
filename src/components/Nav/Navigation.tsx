@@ -4,19 +4,26 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink } from "react-router-dom";
 import { useGetProfileQuery } from "../../services/api";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { persistor, useAppDispatch, useAppSelector } from "../../store";
 import { logOut, setProfile } from "../../services/authSlice";
 import { useEffect } from "react";
+import { IAPIError } from "../../types";
 
 function Navigation({ token }: { token?: string | null }) {
   const dispatch = useAppDispatch();
   const { accessToken, profile } = useAppSelector((state) => state.auth);
 
-  const { data: user } = useGetProfileQuery(token, {
+  const { data: user, error } = useGetProfileQuery(token, {
     pollingInterval: 3000,
     refetchOnMountOrArgChange: true,
     skip: false,
   });
+
+  useEffect(() => {
+    if ((error as IAPIError)?.data?.message.includes("expired")) {
+      persistor.purge();
+    }
+  }, [error]);
 
   useEffect(() => {
     dispatch(setProfile(user));

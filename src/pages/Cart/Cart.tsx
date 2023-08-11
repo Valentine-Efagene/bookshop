@@ -7,7 +7,7 @@ import CartList from "./CartList/CartList";
 import { Link } from "react-router-dom";
 
 export default function Cart() {
-  const { data: products } = useGetAllProductsQuery();
+  const { data: products } = useGetAllProductsQuery({ page: 1, limit: 8 });
 
   return (
     <Container fluid className={`${styles.container} d-grid gap-4`}>

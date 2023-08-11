@@ -22,7 +22,7 @@ const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 function CheckOut() {
   const dispatch = useAppDispatch();
   const { profile } = useAppSelector((state) => state.auth);
-  const { data: products } = useGetAllProductsQuery();
+  const { data: products } = useGetAllProductsQuery({ page: 1, limit: 8 });
   const [createOrder, { error, isSuccess, isLoading }] =
     useCreateOrderMutation();
   const amount =

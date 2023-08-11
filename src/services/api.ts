@@ -7,6 +7,7 @@ import type {
   ICategory,
   ICreateOrderDto,
   IOrder,
+  IPaginationParams,
   IProduct,
   ISignInDto,
   ISignUpDto,
@@ -77,8 +78,11 @@ export const api = createApi({
     }),
 
     // PRODUCTS
-    getAllProducts: builder.query<IProduct[], void>({
-      query: () => `/products`,
+    getAllProducts: builder.query<IProduct[], IPaginationParams>({
+      query: ({ page, limit }) => ({
+        url: `/products`,
+        params: { page, limit },
+      }),
       // Provides a list of `Posts` by `id`.
       // If any mutation is executed that `invalidate`s any of these tags, this query will re-run to be always up-to-date.
       // The `LIST` id is a "virtual id" we just made up to be able to invalidate this query specifically if a new `Posts` element was added.

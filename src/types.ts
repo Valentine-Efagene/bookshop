@@ -29,6 +29,19 @@ export interface IUser {
   isAdmin: boolean;
 }
 
+export interface IPaginationParams {
+  page: number;
+  limit: number;
+}
+
+export interface IAPIError {
+  status: number;
+  data: {
+    message: string;
+    statusCode: number;
+  };
+}
+
 export interface IOrder {
   _id?: string;
   products: IProduct[];

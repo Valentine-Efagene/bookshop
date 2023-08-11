@@ -20,7 +20,8 @@ export default function ProductCard({ product }: { product: IProduct }) {
       <Card.Body>
         <Card.Title className="card-title">{title}</Card.Title>
         <div className="d-flex align-items-center justify-content-between">
-          <span className="display-6">${price * quantity}</span>
+          <span className="display-6">${price}</span>
+          <span className="display-6">{quantity}</span>
         </div>
       </Card.Body>
       {author && <Card.Footer className="text-muted">By {author}</Card.Footer>}
