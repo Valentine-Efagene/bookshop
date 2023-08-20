@@ -42,11 +42,13 @@ export interface IAPIError {
   };
 }
 
+export type IOrderStatus = "pending" | "delivered";
+
 export interface IOrder {
   _id?: string;
   products: IProduct[];
   buyer?: IUser;
-  status: string;
+  status: IOrderStatus;
 }
 
 export interface ICategory {

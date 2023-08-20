@@ -57,18 +57,18 @@ const router = createBrowserRouter([
         path: "/orders",
         children: [
           {
-            path: "/orders",
-            element: (
-              <ProtectedRoute>
-                <Orders />
-              </ProtectedRoute>
-            ),
-          },
-          {
             path: "/orders/:id",
             element: (
               <ProtectedRoute>
                 <Order />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/orders",
+            element: (
+              <ProtectedRoute>
+                <Orders />
               </ProtectedRoute>
             ),
           },

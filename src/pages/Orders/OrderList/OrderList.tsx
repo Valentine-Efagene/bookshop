@@ -2,7 +2,7 @@ import styles from "./OrderList.module.css";
 import OrderCard from "./OrderCard/OrderCard";
 import { IOrder } from "../../../types";
 
-export default function OrderList({ orders }: { orders?: IOrders[] }) {
+export default function OrderList({ orders }: { orders?: IOrder[] }) {
   return (
     <div className={styles.container}>
       {Array.isArray(orders) &&

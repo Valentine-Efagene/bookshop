@@ -30,7 +30,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Products"],
+  tagTypes: ["Products", "Orders"],
   endpoints: (builder) => ({
     signUp: builder.mutation<{ access_token: string }, ISignInDto>({
       // AUTHENTICATION
@@ -140,9 +140,34 @@ export const api = createApi({
     // ORDERS
     getAllOrders: builder.query<IOrder[], void>({
       query: () => "/orders",
+      providesTags: (result) =>
+        // is result available?
+        result
+          ? // successful query
+            [
+              ...result.map(
+                ({ _id }) => ({ type: "Orders", id: _id } as const)
+              ),
+              { type: "Orders", id: "LIST" },
+            ]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+            [{ type: "Orders", id: "LIST" }],
     }),
     getOrderById: builder.query<IOrder, string>({
       query: (id) => `/orders/${id}`,
+    }),
+    updateOrderById: builder.mutation<
+      IOrder,
+      Partial<IOrder> & Pick<IOrder, "_id">
+    >({
+      query: ({ _id, ...patch }) => {
+        return {
+          url: `/orders/${_id}`,
+          method: "PATCH",
+          body: patch,
+        };
+      },
+      invalidatesTags: ["Orders"],
     }),
     createOrder: builder.mutation<IOrder, ICreateOrderDto>({
       query: (order: ICreateOrderDto) => ({
@@ -173,4 +198,5 @@ export const {
   useCreateOrderMutation,
   useGetAllOrdersQuery,
   useGetOrderByIdQuery,
+  useUpdateOrderByIdMutation,
 } = api;
