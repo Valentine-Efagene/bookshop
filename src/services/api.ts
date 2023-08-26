@@ -30,7 +30,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Products", "Orders"],
+  tagTypes: ["Products", "Orders", "Books"],
   endpoints: (builder) => ({
     signUp: builder.mutation<{ access_token: string }, ISignInDto>({
       // AUTHENTICATION
@@ -59,6 +59,7 @@ export const api = createApi({
     // BOOKS
     getAllBooks: builder.query<IBook[], void>({
       query: () => "/books",
+      providesTags: ["Books"],
     }),
     addBook: builder.mutation<Response, FormData>({
       query: (book: FormData) => ({
@@ -66,15 +67,17 @@ export const api = createApi({
         method: "POST",
         body: book,
       }),
+      invalidatesTags: ["Books"],
     }),
     getBookById: builder.query<IBook, string>({
       query: (id) => `/books/${id}`,
     }),
-    deleteBookById: builder.query<string, string>({
+    deleteBookById: builder.mutation<Response, string>({
       query: (id: string) => ({
         url: `/books/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Books"],
     }),
 
     // PRODUCTS
@@ -185,7 +188,7 @@ export const {
   useSignInMutation,
   useSignUpMutation,
   useGetBookByIdQuery,
-  useDeleteBookByIdQuery,
+  useDeleteBookByIdMutation,
   useGetAllBooksQuery,
   useGetProfileQuery,
   useAddProductToCartMutation,

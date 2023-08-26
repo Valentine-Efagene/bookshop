@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 export default function Books() {
   const { data: books } = useGetAllBooksQuery();
-  const { data: products } = useGetAllProductsQuery();
+  const { data: products } = useGetAllProductsQuery({});
 
   return (
     <Container fluid className={`${styles.container} d-grid gap-4`}>
