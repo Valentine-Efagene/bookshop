@@ -12,6 +12,7 @@ import { InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 function EditBook() {
   const { id } = useParams();
@@ -35,6 +36,8 @@ function EditBook() {
       price: book?.price,
     },
   });
+
+  useEffect(() => {}, [id]);
 
   async function onSubmit(data: IUpdateBookDto) {
     if (

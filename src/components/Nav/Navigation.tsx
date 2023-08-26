@@ -3,28 +3,19 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, useLocation } from "react-router-dom";
-import { useGetProfileQuery } from "../../services/api";
-import { persistor, useAppDispatch, useAppSelector } from "../../store";
-import { logOut, setProfile } from "../../services/authSlice";
-import { useEffect } from "react";
-import { IAPIError } from "../../types";
+import { useAppDispatch } from "../../store";
+import { logOut } from "../../services/authSlice";
+import { IUser } from "../../types";
 
-function Navigation({ token }: { token?: string | null }) {
+function Navigation({
+  token,
+  profile,
+}: {
+  token?: string | null;
+  profile?: IUser | null;
+}) {
   const dispatch = useAppDispatch();
-  const { accessToken, profile } = useAppSelector((state) => state.auth);
   const currentPath = useLocation().pathname;
-
-  const { data: user, error } = useGetProfileQuery(token, {
-    pollingInterval: 3000,
-    refetchOnMountOrArgChange: true,
-    skip: false,
-  });
-
-  useEffect(() => {
-    if ((error as IAPIError)?.data?.message.includes("expired")) {
-      persistor.purge();
-    }
-  }, [error]);
 
   const getName = () => {
     if (profile?.firstName && profile.lastName) {
@@ -38,24 +29,28 @@ function Navigation({ token }: { token?: string | null }) {
     return profile?.email;
   };
 
-  useEffect(() => {
-    dispatch(setProfile(user));
-  }, [user, dispatch]);
-
   const links = [
     {
       name: "Home",
       path: "/",
     },
     {
-      name: "About",
-      path: "/about",
-    },
-    {
-      name: "Contact",
-      path: "/contact",
+      name: "Orders",
+      path: "/orders",
     },
   ];
+
+  if (profile?.isAdmin) {
+    links.push({
+      name: "Add Book",
+      path: "/books/add",
+    });
+  } else {
+    links.push({
+      name: "Cart",
+      path: "/cart",
+    });
+  }
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -77,12 +72,12 @@ function Navigation({ token }: { token?: string | null }) {
                     currentPath.includes(path) ? "text-dark" : "text-muted"
                   }
                 >
-                  <NavLink to="/books/add">{name}</NavLink>
+                  <NavLink to={path}>{name}</NavLink>
                 </Nav.Link>
               );
             })}
           </Nav>
-          {accessToken ? (
+          {token ? (
             <NavDropdown title={getName()} id="basic-nav-dropdown">
               <NavDropdown.Item
                 onClick={() => {

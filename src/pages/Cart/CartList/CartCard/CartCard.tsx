@@ -7,11 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 
 export default function CartCard({ product }: { product: IProduct }) {
-  const {
-    quantity,
-    _id = "",
-    book: { thumbnail, title, price, author },
-  } = product;
+  const { quantity, _id = "", book } = product;
+  const { thumbnail, title, price, author } = { ...book };
   const [removeFromCart, { isLoading }] = useDeleteProductByIdMutation();
 
   const handleRemove = async () => {
