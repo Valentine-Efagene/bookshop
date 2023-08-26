@@ -64,7 +64,6 @@ function Navigation({
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {links.map(({ path, name }) => {
-              console.log(currentPath, path);
               return (
                 <Nav.Link
                   key={path}

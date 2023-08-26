@@ -18,7 +18,6 @@ function EditBook() {
   const { id } = useParams();
 
   const { data: book } = useGetBookByIdQuery(id ?? "");
-  console.log(book);
   const [updateBook, { isLoading, isSuccess }] = useUpdateBookByIdMutation();
   const { data: categories } = useGetAllCategoriesQuery(undefined, {});
 
@@ -26,18 +25,32 @@ function EditBook() {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<IUpdateBookDto>({
     defaultValues: {
-      title: book?.title,
-      author: book?.author,
-      stock: book?.stock,
-      description: book?.description,
-      price: book?.price,
+      title: book?.title ?? "",
+      author: book?.author ?? "",
+      stock: book?.stock ?? 0,
+      description: book?.description ?? "",
+      price: book?.price ?? 0,
+      category: book?.category ?? "",
     },
   });
 
-  useEffect(() => {}, [id]);
+  // https://stackoverflow.com/a/64307087/6132438
+  useEffect(() => {
+    const initialData = {
+      title: book?.title ?? "",
+      author: book?.author ?? "",
+      stock: book?.stock ?? 0,
+      description: book?.description ?? "",
+      price: book?.price ?? 0,
+      category: book?.category ?? "",
+    };
+
+    reset(initialData);
+  }, [book, reset]);
 
   async function onSubmit(data: IUpdateBookDto) {
     if (
