@@ -8,22 +8,26 @@ import BookList from "./BookList/BookList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoneyCheckDollar } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../store";
 
 export default function Books() {
+  const { profile } = useAppSelector((state) => state.auth);
   const { data: books } = useGetAllBooksQuery();
   const { data: products } = useGetAllProductsQuery({});
 
   return (
     <Container fluid className={`${styles.container} d-grid gap-4`}>
-      <div>
-        <Link to="/cart" className="btn btn-outline-dark">
-          {products?.reduce(
-            (acc, curr) => acc + curr.quantity * curr.book.price,
-            0
-          )}{" "}
-          <FontAwesomeIcon icon={faMoneyCheckDollar} />
-        </Link>
-      </div>
+      {!profile?.isAdmin && (
+        <div>
+          <Link to="/cart" className="btn btn-outline-dark">
+            {products?.reduce(
+              (acc, curr) => acc + curr?.quantity * curr?.book?.price,
+              0
+            )}{" "}
+            <FontAwesomeIcon icon={faMoneyCheckDollar} />
+          </Link>
+        </div>
+      )}
       <BookList books={books} />
     </Container>
   );

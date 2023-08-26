@@ -78,3 +78,5 @@ export interface IAddBookDto {
   stock: number;
   thumbnail: File | undefined;
 }
+
+export type IUpdateBookDto = Partial<IAddBookDto>;

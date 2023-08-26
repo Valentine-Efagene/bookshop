@@ -13,6 +13,7 @@ import CheckOut from "./pages/CheckOut/CheckOut";
 import Orders from "./pages/Orders/Orders";
 import Order from "./pages/Order/Order";
 import AdminRoute from "./routes/AdminRoute";
+import EditBook from "./pages/EditBook/EditBook";
 
 // https://reactrouter.com/en/main/routers/picking-a-router#web-projects
 const router = createBrowserRouter([
@@ -90,6 +91,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <Books />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/books/:id/edit",
+            element: (
+              <ProtectedRoute>
+                <EditBook />
               </ProtectedRoute>
             ),
           },

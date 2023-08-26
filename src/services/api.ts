@@ -69,6 +69,18 @@ export const api = createApi({
       }),
       invalidatesTags: ["Books"],
     }),
+    updateBookById: builder.mutation<IBook, { id: string; formData: FormData }>(
+      {
+        query: ({ id, formData }) => {
+          return {
+            url: `/books/${id}`,
+            method: "PATCH",
+            body: formData,
+          };
+        },
+        invalidatesTags: ["Books"],
+      }
+    ),
     getBookById: builder.query<IBook, string>({
       query: (id) => `/books/${id}`,
     }),
@@ -185,19 +197,29 @@ export const api = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  // Auth and Profile
   useSignInMutation,
   useSignUpMutation,
+  useGetProfileQuery,
+
+  // Books
+  useAddBookMutation,
   useGetBookByIdQuery,
+  useUpdateBookByIdMutation,
   useDeleteBookByIdMutation,
   useGetAllBooksQuery,
-  useGetProfileQuery,
+
+  // Products
   useAddProductToCartMutation,
   useGetAllProductsQuery,
   useDeleteProductByIdMutation,
-  useAddBookMutation,
+
+  // Categories
   useCreateCategoryMutation,
   useDeleteCategoryByIdMutation,
   useGetAllCategoriesQuery,
+
+  // Orders
   useCreateOrderMutation,
   useGetAllOrdersQuery,
   useGetOrderByIdQuery,

@@ -28,6 +28,7 @@ export default function Cart() {
           </span>
         </Link>
       </div>
+
       <CartList products={products} />
     </Container>
   );
