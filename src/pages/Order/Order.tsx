@@ -7,24 +7,39 @@ import {
 import ProductList from "./ProductList/ProductList";
 import { useParams } from "react-router-dom";
 import { Button, Form, Spinner } from "react-bootstrap";
-import { useState } from "react";
-import { IOrderStatus } from "../../types";
+import { useEffect } from "react";
+import { IOrder } from "../../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { Controller, useForm } from "react-hook-form";
+
+type IData = Pick<IOrder, "status">;
 
 export default function Order() {
   const { id } = useParams();
   const { data: order } = useGetOrderByIdQuery(id ?? "", {});
   const [updateOrder, { isLoading, isSuccess }] = useUpdateOrderByIdMutation();
-  const [status, setStatus] = useState<IOrderStatus>(
-    order?.status ?? "pending"
-  );
 
-  const update = async () => {
-    if (!status) return;
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<IData>({
+    defaultValues: {
+      status: order?.status ?? "pending",
+    },
+  });
 
+  useEffect(() => {
+    reset({
+      status: order?.status ?? "pending",
+    });
+  }, [order, reset]);
+
+  const update = async (data: IData) => {
     try {
-      updateOrder({ _id: id, status });
+      updateOrder({ _id: id, status: data.status });
     } catch (error) {
       console.log(error);
     }
@@ -39,23 +54,37 @@ export default function Order() {
           0
         )}
       </div>
-      <Form.Select
-        onChange={(e) => setStatus(e.target.value as IOrderStatus)}
-        style={{ width: "fit-content" }}
-        name="status"
-        id=""
+      <Form
+        onSubmit={handleSubmit(update)}
+        className="d-flex flex-column gap-3"
       >
-        <option selected={status === "pending"} value="pending">
-          Pending
-        </option>
-        <option selected={status === "delivered"} value="delivered">
-          Delivered
-        </option>
-      </Form.Select>
-      <Button onClick={update} style={{ width: "fit-content" }}>
-        Save {isLoading && <Spinner size="sm" />}
-        {isSuccess && <FontAwesomeIcon icon={faCheckCircle} />}
-      </Button>
+        <Form.Group>
+          <Form.Label htmlFor="status">Status</Form.Label>
+          <Controller
+            name="status"
+            control={control}
+            render={({ field }) => (
+              <Form.Select {...field} style={{ width: "fit-content" }}>
+                <option selected={status === "pending"} value="pending">
+                  Pending
+                </option>
+                <option selected={status === "delivered"} value="delivered">
+                  Delivered
+                </option>
+              </Form.Select>
+            )}
+          />
+        </Form.Group>
+        <Button
+          className="btn btn-dark"
+          type="submit"
+          disabled={isLoading || !isDirty}
+          style={{ width: "fit-content" }}
+        >
+          Save Changes {isLoading && <Spinner size="sm" />}
+          {isSuccess && <FontAwesomeIcon icon={faCheckCircle} />}
+        </Button>
+      </Form>
       <ProductList products={order?.products} />
     </Container>
   );

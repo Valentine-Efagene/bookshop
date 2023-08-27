@@ -30,7 +30,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Products", "Orders", "Books"],
+  tagTypes: ["Product", "Order", "Book", "Category"],
   endpoints: (builder) => ({
     signUp: builder.mutation<{ access_token: string }, ISignInDto>({
       // AUTHENTICATION
@@ -59,7 +59,7 @@ export const api = createApi({
     // BOOKS
     getAllBooks: builder.query<IBook[], void>({
       query: () => "/books",
-      providesTags: ["Books"],
+      providesTags: ["Book"],
     }),
     addBook: builder.mutation<Response, FormData>({
       query: (book: FormData) => ({
@@ -67,7 +67,7 @@ export const api = createApi({
         method: "POST",
         body: book,
       }),
-      invalidatesTags: ["Books"],
+      invalidatesTags: ["Book"],
     }),
     updateBookById: builder.mutation<IBook, { id: string; formData: FormData }>(
       {
@@ -78,18 +78,19 @@ export const api = createApi({
             body: formData,
           };
         },
-        invalidatesTags: ["Books"],
+        invalidatesTags: ["Book"],
       }
     ),
     getBookById: builder.query<IBook, string>({
       query: (id) => `/books/${id}`,
+      providesTags: (result, error, id) => [{ type: "Book", id }],
     }),
     deleteBookById: builder.mutation<Response, string>({
       query: (id: string) => ({
         url: `/books/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Books"],
+      invalidatesTags: ["Book"],
     }),
 
     // PRODUCTS
@@ -107,12 +108,12 @@ export const api = createApi({
           ? // successful query
             [
               ...result.map(
-                ({ _id }) => ({ type: "Products", id: _id } as const)
+                ({ _id }) => ({ type: "Product", id: _id } as const)
               ),
-              { type: "Products", id: "LIST" },
+              { type: "Product", id: "LIST" },
             ]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-            [{ type: "Products", id: "LIST" }],
+            [{ type: "Product", id: "LIST" }],
     }),
     addProductToCart: builder.mutation<IProduct, IProduct>({
       query: (product) => ({
@@ -120,7 +121,7 @@ export const api = createApi({
         method: "POST",
         body: product,
       }),
-      invalidatesTags: [{ type: "Products", id: "LIST" }],
+      invalidatesTags: [{ type: "Product", id: "LIST" }],
     }),
     deleteProductById: builder.mutation<string, string>({
       query: (id: string) => ({
@@ -128,15 +129,17 @@ export const api = createApi({
         method: "DELETE",
       }),
 
-      invalidatesTags: (result, error, id) => [{ type: "Products", id }],
+      invalidatesTags: (result, error, id) => [{ type: "Product", id }],
     }),
 
     // CATEGORIES
     getAllCategories: builder.query<ICategory[], void>({
       query: () => "/categories",
+      providesTags: ["Category"],
     }),
     getCategoryById: builder.query<ICategory, string>({
       query: (id) => `/categories/${id}`,
+      providesTags: ["Category"],
     }),
     createCategory: builder.mutation<string, ICategory>({
       query: (category) => ({
@@ -144,12 +147,14 @@ export const api = createApi({
         method: "POST",
         body: category,
       }),
+      invalidatesTags: ["Category"],
     }),
     deleteCategoryById: builder.mutation<string, string>({
       query: (id: string) => ({
         url: `/categories/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Category"],
     }),
 
     // ORDERS
@@ -160,16 +165,15 @@ export const api = createApi({
         result
           ? // successful query
             [
-              ...result.map(
-                ({ _id }) => ({ type: "Orders", id: _id } as const)
-              ),
-              { type: "Orders", id: "LIST" },
+              ...result.map(({ _id }) => ({ type: "Order", id: _id } as const)),
+              { type: "Order", id: "LIST" },
             ]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-            [{ type: "Orders", id: "LIST" }],
+            [{ type: "Order", id: "LIST" }],
     }),
     getOrderById: builder.query<IOrder, string>({
       query: (id) => `/orders/${id}`,
+      providesTags: (result, error, id) => [{ type: "Order", id }],
     }),
     updateOrderById: builder.mutation<
       IOrder,
@@ -182,7 +186,7 @@ export const api = createApi({
           body: patch,
         };
       },
-      invalidatesTags: ["Orders"],
+      invalidatesTags: ["Order"],
     }),
     createOrder: builder.mutation<IOrder, ICreateOrderDto>({
       query: (order: ICreateOrderDto) => ({
